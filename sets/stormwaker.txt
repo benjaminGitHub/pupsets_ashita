@@ -1,0 +1,5 @@
+{
+    "attachments": [ "Accelerator II", "Damage Gauge", "Heatsink", "Ice Maker", "Loudspeaker II", "Mana Channeler", "Mana Tank II", "Mana Tank III", "Resister", "Resister II", "Tranquilizer II", "Vivi-Valve" ],
+    "frame": "Stormwaker Frame",
+    "head": "Stormwaker Head"
+}

@@ -1,0 +1,5 @@
+{
+    "attachments": [ "Accelerator II", "Attuner", "Auto-Repair Kit II", "Heatsink", "Ice Maker", "Loudspeaker II", "Mana Channeler", "Mana Tank II", "Mana Tank III", "Stealth Screen", "Stealth Screen II", "Tranquilizer II"],
+    "frame": "Stormwaker Frame",
+    "head": "Spiritreaver Head"
+}

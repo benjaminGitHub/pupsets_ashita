@@ -1,0 +1,5 @@
+{
+    "attachments": [ "Accelerator II", "Armor Plate II", "Attuner", "Auto-Repair Kit II", "Damage Gauge", "Heatsink", "Mana Jammer", "Mana Jammer II", "Mana Tank III", "Target Marker", "Tranquilizer II", "Vivi=Valve"],
+    "frame": "Stormwaker Frame",
+    "head": "Soulsoother Head"
+}

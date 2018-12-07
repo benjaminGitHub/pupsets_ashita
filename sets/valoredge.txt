@@ -1,0 +1,5 @@
+{
+    "attachments": [ "Accelerator II", "Auto-Repair Kit III", "Armor Plate", "Armor Plate II", "Hammermill", "Heatsink", "Inhibitor", "Inhibitor II", "Stabilizer II", "Steam Jacket", "Target Marker", "Tension Spring III"  ],
+    "frame": "Valoredge Frame",
+    "head": "Valoredge Head"
+}

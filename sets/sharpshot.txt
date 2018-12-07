@@ -1,0 +1,5 @@
+{
+    "attachments": [ "Armor Plate II", "Auto-Repair Kit III", "Inhibitor", "Drum Magazine", "Heatsink", "Pattern Reader", "Scope", "Scope II", "Stabilizer II", "Percolator", "Stabilizer", "Inhibitor II" ],
+    "frame": "Sharpshot Frame",
+    "head": "Sharpshot Head"
+}
