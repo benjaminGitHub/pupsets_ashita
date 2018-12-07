@@ -20,3 +20,8 @@ delete
 Create a directory in youre Ashita/Addons path and call it "pupsets"  
 Place pupsets.lua and puppeteer.lua in the directory.  
 Optional: You can also copy the sets directory into youre pupsets folder if you want to use my example sets.  
+
+# Thanks
+Many thanks to at0mos for all the work he puts into the game.  
+This addon is based on blusets that at0mos created.  
+Thanks to dynisor for his assistance and help with reversing the pup data in memory.  
