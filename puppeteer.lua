@@ -37,6 +37,7 @@ puppeteer.EQUIP_OFFSET 	 = 0x2000  	-- The offsets for equipment id's
 puppeteer.ATTACH_OFFSET  = 0x2100  	-- The offsets for attachment id's
 puppeteer.callback		 = nil
 puppeteer.workload		 = 0;
+puppeteer.is_retail    = true;      -- true if retail server, false if private server.
 
 
 ----------------------------------------------------------------------------------------------------
@@ -171,6 +172,7 @@ function puppeteer.initialize()
     end
 
     puppeteer.mem.offset1 = offset1;
+    puppeteer.is_retail = puppeteer.isRetailServer();
 end
 
 
@@ -366,8 +368,13 @@ end
 ----------------------------------------------------------------------------------------------------
 function puppeteer.setHead(name)
 	local packet = puppeteer.createPacket();
-	packet[0x5] = 0x01;
-	packet[0xD] = puppeteer.getEquipmentIdOffset(name);
+  local equipmentIdOffset = puppeteer.getEquipmentIdOffset(name);
+  if (puppeteer.is_retail) then
+	  packet[0x5] = equipmentIdOffset; --retail valid
+  else
+    packet[0x5] = 0x01; --private server valid only
+  end
+	packet[0xD] = equipmentIdOffset;
 	puppeteer.workload = puppeteer.workload + 1;
 	table.insert(puppeteer.queue, { 0x102, packet });
 end
@@ -379,8 +386,13 @@ end
 ----------------------------------------------------------------------------------------------------
 function puppeteer.setFrame(name)
 	local packet = puppeteer.createPacket();
-	packet[0x5] = 0x01;
-	packet[0xE] = puppeteer.getEquipmentIdOffset(name);
+  local equipmentIdOffset = puppeteer.getEquipmentIdOffset(name);
+  if (puppeteer.is_retail) then
+	  packet[0x5] = equipmentIdOffset; --retail valid
+  else
+    packet[0x5] = 0x01; --private server valid only
+  end
+	packet[0xE] = equipmentIdOffset;
 	puppeteer.workload = puppeteer.workload + 1;
 	table.insert(puppeteer.queue, { 0x102, packet });
 end
@@ -404,8 +416,8 @@ end
 
 
 ----------------------------------------------------------------------------------------------------
--- func: setFrame
--- desc: 
+-- func: setAttachments
+-- desc: Sets all of the desired attachments at once. Not safe for retail use.
 ----------------------------------------------------------------------------------------------------
 function puppeteer.setAttachments(arrAtt)
 	local offsets = puppeteer.getAttachmentOffsetsFromNames(arrAtt);
@@ -418,6 +430,23 @@ function puppeteer.setAttachments(arrAtt)
 	end
 	puppeteer.workload = puppeteer.workload + 1;
 	table.insert(puppeteer.queue, { 0x102, packet });
+end
+
+----------------------------------------------------------------------------------------------------
+-- func: setAttachmentsRetailSafe 
+-- desc: Sets each individual attachment one at a time. Tested on retail by Benjaman.
+----------------------------------------------------------------------------------------------------
+function puppeteer.setAttachmentsRetailSafe(arrAtt)
+  local offsets = puppeteer.getAttachmentOffsetsFromNames(arrAtt);
+	for k, v in pairs(offsets) do
+		if( k <= 12 ) then
+    	local packet = puppeteer.createPacket();
+      packet[0x5] = v; --retail version must have key 5 value match v
+			packet[0xE + k] = v;
+      puppeteer.workload = puppeteer.workload + 1;
+	    table.insert(puppeteer.queue, { 0x102, packet });
+		end
+	end
 end
 
 
@@ -433,6 +462,7 @@ function puppeteer.processQueue()
             local data = table.remove(puppeteer.queue, 1);
 			if(puppeteer.isValidJob() == true) then
 				AddOutgoingPacket(data[1], data[2]);
+        --puppeteer.fakeAddOutgoingPacket(data[1], data[2]) --debug with this
 			end
 			if(puppeteer.workload ~= nil and puppeteer.workload > 0) then
 				puppeteer.workload = puppeteer.workload - 1;
@@ -444,6 +474,19 @@ function puppeteer.processQueue()
     end
 end
 
+
+----------------------------------------------------------------------------------------------------
+-- func: fakeAddOutgoingPacket
+-- desc: prints out the packet to be sent instead of sending it.
+----------------------------------------------------------------------------------------------------
+function puppeteer.fakeAddOutgoingPacket(id, packet)
+  print('id: '..tostring(id))
+  for k,v in ipairs(packet) do
+    if tostring(v) ~= '0' then
+      print('key:'..k..', value:'..v)
+    end
+  end
+end
 
 ----------------------------------------------------------------------------------------------------
 -- func: process_queue
@@ -459,7 +502,11 @@ function puppeteer.equipSet(set, onComplete)
 	puppeteer.resetAttachments();
 	puppeteer.setHead(set["head"]);
 	puppeteer.setFrame(set["frame"]);
-	puppeteer.setAttachments(set["attachments"]);
+  if (puppeteer.is_retail) then
+	  puppeteer.setAttachmentsRetailSafe(set["attachments"]);
+  else
+    puppeteer.setAttachments(set["attachments"]);
+  end
 end
 
 ----------------------------------------------------------------------------------------------------
@@ -482,6 +529,19 @@ function puppeteer.getPupSet()
 	return currentSet;
 end
 
+----------------------------------------------------------------------------------------------------
+-- func: isRetailServer
+-- desc: Uses the boot_config to determine whether the player is playing on retail or private
+----------------------------------------------------------------------------------------------------
+function puppeteer.isRetailServer() 
+  local boot_command = AshitaCore:GetConfigurationManager():get_string('boot_config', 'boot_command')
+    if (string.find(boot_command, '--server')) then
+      return false;
+    else
+      return true;
+    end
+  return true;
+end
 
 ----------------------------------------------------------------------------------------------------
 -- Returns the puppeteer table.

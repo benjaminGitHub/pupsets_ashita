@@ -1,7 +1,7 @@
 # pupsets for Ashita
 Change pup automaton equipment sets for Ashita  
-Only tested with DSP servers.  
-[WARNING]: Untested and not recommended for retail servers.  
+Originally designed for use withh DSP servers.  
+Tested on Retail. Use at your own risk.
 
 # Commands
 /pupsets or /pupset or /ps  

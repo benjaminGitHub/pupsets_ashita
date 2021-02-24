@@ -31,9 +31,9 @@
 	local auto_activate = false;
 --################################
 
-_addon.author   = 'DivByZero';
+_addon.author   = 'DivByZero'; -- Retail addition added by Benjaman --
 _addon.name     = 'pupsets';
-_addon.version  = '1.0.0';
+_addon.version  = '1.0.1';
 
 require 'common'
 require 'ffxi.recast'
